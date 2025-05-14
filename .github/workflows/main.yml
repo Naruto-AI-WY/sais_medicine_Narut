@@ -25,12 +25,12 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.ALIYUN_REGISTRY }}/naruto007/sais_medicine:latest .
+          docker build -t ${{ secrets.ALIYUN_REGISTRY }}/naruto007/sais_medicine_narut:latest .
       - name: Debug Docker Push
         run: |
-          echo "→ Pushing image to ${{ secrets.ALIYUN_REGISTRY }}/naruto007/sais_medicine:latest"
-          docker push "${{ secrets.ALIYUN_REGISTRY }}/naruto007/sais_medicine:latest" --verbose || true
+          echo "→ Pushing image to ${{ secrets.ALIYUN_REGISTRY }}/naruto007/sais_medicine_narut:latest"
+          docker push "${{ secrets.ALIYUN_REGISTRY }}/naruto007/sais_medicine_narut:latest" --verbose || true
           echo; echo "Local images:" && docker images
       - name: Push Docker image
         run: |
-          docker push ${{ secrets.ALIYUN_REGISTRY }}/naruto007/sais_medicine:latest
+          docker push ${{ secrets.ALIYUN_REGISTRY }}/naruto007/sais_medicine_narut:latest
