@@ -1,0 +1,33 @@
+# Python缓存文件
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 数据集文件夹 (通常较大，不适合放在Git仓库)
+RNA_design_public/
+
+# 虚拟环境
+venv/
+env/
+ENV/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# macOS系统文件
+.DS_Store
+
+# 训练检查点 (通常很大)
+checkpoints/*
+# 保留检查点目录，但忽略其内容
+!checkpoints/.gitkeep
+
+# 日志目录
+logs/*
+# 保留logs目录，但忽略其内容
+!logs/.gitkeep
+
+# 本地运行脚本
+run_local.sh
+run_rna_env.sh
+run_with_env.sh

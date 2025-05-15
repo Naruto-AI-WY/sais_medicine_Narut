@@ -106,14 +106,39 @@ class RNAGraphBuilder:
             # 选择C4'原子(假设是第4个原子)计算二面角
             c4_coords = coord[:, 3, :]
             for i in range(1, num_nodes-2):
-                # 计算连续4个C4'原子形成的二面角
-                p1, p2, p3, p4 = c4_coords[i-1:i+3]
-                v1, v2, v3 = p2-p1, p3-p2, p4-p3
-                n1 = np.cross(v1, v2)
-                n2 = np.cross(v2, v3)
-                angle = np.arccos(np.dot(n1, n2)/(np.linalg.norm(n1)*np.linalg.norm(n2) + 1e-6))
-                dihedral_feat[i, 0] = np.sin(angle)
-                dihedral_feat[i, 1] = np.cos(angle)
+                try:
+                    # 计算连续4个C4'原子形成的二面角
+                    p1, p2, p3, p4 = c4_coords[i-1:i+3]
+                    
+                    # 检查坐标是否有效
+                    if np.any(np.isnan(p1)) or np.any(np.isnan(p2)) or np.any(np.isnan(p3)) or np.any(np.isnan(p4)):
+                        continue
+                        
+                    v1, v2, v3 = p2-p1, p3-p2, p4-p3
+                    
+                    # 检查向量是否为零
+                    if np.all(np.isclose(v1, 0)) or np.all(np.isclose(v2, 0)) or np.all(np.isclose(v3, 0)):
+                        continue
+                        
+                    n1 = np.cross(v1, v2)
+                    n2 = np.cross(v2, v3)
+                    
+                    # 检查法向量是否为零向量
+                    n1_norm = np.linalg.norm(n1)
+                    n2_norm = np.linalg.norm(n2)
+                    if n1_norm < 1e-6 or n2_norm < 1e-6:
+                        continue
+                        
+                    # 计算点积并归一化，使用clip确保在[-1, 1]范围内
+                    cos_angle = np.clip(np.dot(n1, n2) / (n1_norm * n2_norm), -1.0, 1.0)
+                    angle = np.arccos(cos_angle)
+                    
+                    # 存储二面角特征
+                    dihedral_feat[i, 0] = np.sin(angle)
+                    dihedral_feat[i, 1] = np.cos(angle)
+                except Exception as e:
+                    # 如果计算出错，简单跳过
+                    continue
         
         # 计算节点间距离统计特征
         dist_feat = np.zeros((num_nodes, 4))  # 距离统计特征
